@@ -220,3 +220,63 @@ The JWT generated after successful login was verified using `jsonwebtoken` and t
 The decoded payload contained the user's `_id`, `username`, token issue time (`iat`), and expiration time (`exp`).
 
 ![JWT Verification](screenshots/05-jwt-verification.png)
+
+## 7. Challenges Faced and How I Addressed Them
+
+During the development and testing of this project, I encountered a few challenges that helped me better understand Node.js, Express, MongoDB, password security, and JWT authentication.
+
+### 7.1 Missing JWT Dependency
+
+**Challenge:**
+
+When implementing the login route, the application initially produced an error because the `jsonwebtoken` package was not installed in the project.
+
+**How I Addressed It:**
+
+I installed the missing dependency using:
+
+```bash
+npm install jsonwebtoken
+```
+
+This updated `package.json` and `package-lock.json`. After installing the package, the application started successfully.
+
+### 7.2 Understanding JWT Generation and Verification
+
+**Challenge:**
+
+Although I had implemented JWT generation using `jwt.sign()`, I needed to understand how to verify the generated token and retrieve its payload.
+
+**How I Addressed It:**
+
+I created a temporary `verifyToken.js` script to test token verification independently using `jwt.verify()` and the JWT secret stored in the environment variables.
+
+During testing, I encountered JWT verification errors because the token value was incomplete or incorrectly copied. After correcting the token value, verification succeeded.
+
+The decoded payload displayed the user's `_id`, `username`, issue time (`iat`), and expiration time (`exp`).
+
+This helped me understand how a signed JWT can be verified and how its payload can be retrieved.
+
+**Reference Image:** `05-jwt-verification.png`
+
+### 7.3 Testing Duplicate Email Validation
+
+**Challenge:**
+
+I wanted to verify that the registration endpoint prevented users from registering with an email address that already existed in MongoDB.
+
+**How I Addressed It:**
+
+I tested the registration endpoint in Postman using an email address that had already been registered.
+
+I also changed the username and password while keeping the email address the same. The application correctly returned a `400 Bad Request` response with the message:
+
+```json
+{
+  "message": "User with this email already exists."
+}
+```
+
+This confirmed that the duplicate email check worked independently of the other registration fields.
+
+**Reference Image:** `02-duplicate-email.png`
