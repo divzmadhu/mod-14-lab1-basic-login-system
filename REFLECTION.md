@@ -1,4 +1,5 @@
-# Basic Login System using Node.js, Express, and MongoDB
+# Module -14 Lab 1 Basic Login System
+Basic Login System using Node.js, Express, and MongoDB
 
 ## 1. Project Overview
 
