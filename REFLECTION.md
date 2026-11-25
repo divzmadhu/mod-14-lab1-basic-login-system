@@ -166,7 +166,12 @@ The JWT token is generated dynamically after successful authentication.
 }
 ```
 
-The same error message is returned whether the email does not exist or the password is incorrect.
+The same error response is returned in both of the following situations:
+
+- The email address does not exist in the database.
+- The email address exists, but the password is incorrect.
+
+This helps avoid revealing whether an email address is registered in the application.
 
 ### 5.3 API Endpoint Summary
 
@@ -213,7 +218,15 @@ The login endpoint was tested with an incorrect password to verify that unauthor
 
 ![Incorrect Password](screenshots/04-login-incorrect-password.png)
 
-### 6.5 JWT Verification
+### 6.5 Login with a Non-Existent User
+
+The login endpoint was tested using an email address that was not registered in the database.
+
+**Expected Result:** `400 Bad Request`
+
+![Non-Existent User Login](screenshots/06-login-nonexistent-user.png)
+
+### 6.6 JWT Verification
 
 The JWT generated after successful login was verified using `jsonwebtoken` and the configured JWT secret.
 
@@ -280,3 +293,43 @@ I also changed the username and password while keeping the email address the sam
 This confirmed that the duplicate email check worked independently of the other registration fields.
 
 **Reference Image:** `02-duplicate-email.png`
+
+### 7.4 Testing Login with a Non-Existent User
+
+**Challenge:**
+
+I wanted to verify that the login endpoint correctly handled login attempts using an email address that was not registered in the database.
+
+**How I Addressed It:**
+
+I tested the login endpoint in Postman using an email address that did not exist in MongoDB.
+
+The application correctly returned a `400 Bad Request` response with the message:
+
+```json
+{
+  "message": "Incorrect email or password."
+}
+```
+
+This confirmed that the application rejected login attempts from non-existent users without revealing whether a particular email address was registered.
+
+**Reference Image:** `06-login-nonexistent-user.png`
+
+## 8. Future Improvements
+
+Although the project successfully implements user registration, login, password hashing, and JWT generation and verification, several additional features could further improve its security and functionality.
+
+The following enhancements could be considered for future development:
+
+1. **JWT Authentication Middleware:** Implement middleware to verify JWT tokens before allowing access to protected API routes.
+
+2. **Protected Routes:** Introduce routes that can only be accessed by authenticated users with valid JWT tokens.
+
+3. **Rate Limiting:** Limit the number of login attempts within a specific time period to help prevent brute-force attacks.
+
+4. **Account Lockout:** Temporarily lock user accounts after multiple consecutive failed login attempts to provide additional protection against unauthorized access.
+
+5. **Password Reset:** Implement a secure password reset mechanism to allow users to recover access to their accounts if they forget their passwords.
+
+These improvements would help extend the basic authentication system into a more comprehensive and secure user authentication solution.
